@@ -54,8 +54,8 @@ public class UserController {
 
     @GetMapping("/countUsers")
     @ResponseBody
-    public int countUsers() {
-        int count = userService.count();
+    public Long countUsers() {
+        Long count = userService.count();
         log.debug("Number of users in the database: " + count);
         return count;
     }
@@ -81,7 +81,7 @@ public class UserController {
     public void remove(@PathVariable int index) {
         log.debug("Number of users in the database: " + userService.count());
         log.debug("Removing one user from database");
-        userService.removeUser(index);
+        userService.removeUser((long) index);
         log.debug("Number of users in the database: " + userService.count());
     }
 
@@ -95,9 +95,9 @@ public class UserController {
 
     @GetMapping("/showByLastName/{lastName}")
     @ResponseBody
-    public User showByLastName(@PathVariable String lastName) {
-        User user = userService.showByLastName(lastName);
-        log.debug("Returning user by name " + lastName + ": " + user);
-        return user;
+    public List<User> showByLastName(@PathVariable String lastName) {
+        List<User> users = userService.showByLastName(lastName);
+        users.forEach(u -> log.debug("Returning user by name " + u.getLastName() + ": " + u));
+        return users;
     }
 }

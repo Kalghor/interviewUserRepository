@@ -1,7 +1,7 @@
 package pl.interview.users.domain.service;
 
 import org.springframework.stereotype.Service;
-import pl.interview.users.domain.interfaces.IUserService;
+import pl.interview.users.domain.interfaces.IUserRepository;
 import pl.interview.users.domain.model.User;
 
 import java.io.File;
@@ -16,24 +16,22 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService implements IUserService {
-    private List<User> users;
+public class UserService {
+    private IUserRepository userRepository;
 
-    public UserService(List<User> users) {
-        this.users = users;
+    public UserService(IUserRepository userRepository) {
+        this.userRepository = userRepository;;
     }
 
-    private static Long nextId = 1L;
-
-    @Override
     public List<User> getUsers() {
+        Iterable<User> all = userRepository.findAll();
+        List<User> users = new ArrayList<>();
+        all.forEach(users::add);
         return users;
     }
 
-    @Override
     public void addUser(User user) {
-        user.setId(nextId++);
-        users.add(user);
+        userRepository.save(user);
     }
 
 
@@ -105,6 +103,7 @@ public class UserService implements IUserService {
 
     private boolean isPhoneNumberExist(int phoneNumber) {
         boolean result = false;
+        Iterable<User> users = userRepository.findAll();
 
         for (User u : users) {
             if (u.getPhoneNumber() == phoneNumber) {
@@ -114,37 +113,46 @@ public class UserService implements IUserService {
         return result;
     }
 
-    public int count() {
-        return users.size();
+    public Long count() {
+        return userRepository.count();
     }
 
     public List<User> listByAge() {
+        Iterable<User> all = userRepository.findAll();
+        List<User> users = new ArrayList<>();
+        all.forEach(users::add);
         return users.stream().sorted(Comparator.comparing(User::getBirthDate)).collect(Collectors.toList());
     }
 
     public void removeAll() {
-        users = new ArrayList<>();
+        userRepository.deleteAll();
     }
 
     public User oldestUserWithPhoneNumber() {
+        Iterable<User> all = userRepository.findAll();
+        List<User> users = new ArrayList<>();
+        all.forEach(users::add);
         return users.stream()
                 .filter(u -> u.getPhoneNumber() != 0)
                 .min(Comparator.comparing(User::getBirthDate)).get();
     }
 
-    public User showByLastName(String lastName) {
-        Optional<User> any = users.stream().filter(u -> u.getLastName().equalsIgnoreCase(lastName)).findAny();
-        if (any.isPresent()) {
-            return any.get();
+    public List<User> showByLastName(String lastName) {
+        Iterable<User> all = userRepository.findAll();
+        List<User> users = new ArrayList<>();
+        all.forEach(users::add);
+        List<User> userList = users.stream().filter(u -> u.getLastName().equalsIgnoreCase(lastName)).collect(Collectors.toList());
+        if (!userList.isEmpty()) {
+            return userList;
         } else {
             throw new NoSuchElementException("User not found");
         }
     }
 
-    public void removeUser(int index) {
-        if (index < 0 || index >= users.size()) {
+    public void removeUser(Long index) {
+        if (index < 0 || index >= userRepository.count()) {
             throw new IndexOutOfBoundsException("Index Out Of Bounds");
         }
-        users.remove(index - 1);
+        userRepository.deleteById(index);
     }
 }
