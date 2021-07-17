@@ -1,4 +1,4 @@
-package pl.interview.users.domain.service;
+package pl.interview.users.service;
 
 import org.springframework.stereotype.Component;
 import pl.interview.users.domain.interfaces.IUserRepository;

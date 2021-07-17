@@ -1,4 +1,4 @@
-package pl.interview.users.domain.service;
+package pl.interview.users.service;
 
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;

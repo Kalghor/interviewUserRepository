@@ -11,5 +11,8 @@ public interface IUserRepository extends CrudRepository<User, Long> {
     @Query("SELECT u.phoneNumber from User u")
     List<Long> findPhoneNumbersAllUsers();
 
+    User findUserByLastName(String lastName);
+
+    User findFirstByOrderByBirthDateAsc();
 
 }

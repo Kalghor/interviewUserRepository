@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor @NoArgsConstructor
-public class UserBean extends CsvBean{
+public class UserBean {
 
     @CsvBindByName(column = "first_name")
     private String firstName;

@@ -17,7 +17,7 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
     @Column(name = "birth_date")
-    private LocalDate BirthDate;
+    private LocalDate birthDate;
     @Column(name = "phone_number")
     private Long phoneNumber;
 
