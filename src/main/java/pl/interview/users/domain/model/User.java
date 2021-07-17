@@ -19,8 +19,7 @@ public class User {
     @Column(name = "birth_date")
     private LocalDate BirthDate;
     @Column(name = "phone_number")
-    private int phoneNumber;
+    private Long phoneNumber;
 
-    public User(Long id, String s, String s1, LocalDate dateOfBirth) {
-    }
+
 }
